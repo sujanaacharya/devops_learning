@@ -1,0 +1,41 @@
+// Jenkinsfile (Declarative Pipeline)
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                echo 'Source code will be checked out by Jenkins automatically.'
+                // For "Pipeline script from SCM", checkout is implicit for the Jenkinsfile's repo
+            }
+        }
+
+        stage('Run Hello Script') {
+            steps {
+                echo 'Attempting to run hello.sh...'
+                // This assumes hello.sh is in the root of the checked-out workspace
+                sh './hello.sh'
+            }
+        }
+
+        stage('Simple Echo') {
+            steps {
+                echo 'Hello from the Jenkinsfile pipeline itself!'
+                echo "Pipeline executed on branch: ${env.BRANCH_NAME}"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
